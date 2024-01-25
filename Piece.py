@@ -1,14 +1,16 @@
 from PieceType import PieceType
 from abc import abstractmethod, ABC
 from Move import Move
-from Square import Square
 from moveEngine.MoveEngine import MoveEngine
 
 class Piece:
-    def __init__(self, isWhiteIn: bool, pieceTypeIn: PieceType, position: list[int],
+    def __init__(self, id: str, isWhiteIn: bool, pieceTypeIn: PieceType, 
+                 startFile: int, startRank: int, 
                  moveEngine: MoveEngine):
+        self.id = id
+        self.file = startFile
+        self.rank = startRank
         self.isWhite = isWhiteIn
-        self.currentSquare = Square(position[0], position[1])
         self.pieceType = pieceTypeIn
         self.moveEngine = moveEngine
 
@@ -18,5 +20,12 @@ class Piece:
         else:  
             return "black piece"
 
-    def listPossibleMoves(self) -> list[Move]:
-        return self.moveEngine.listPossibleMoves(self.currentSquare, self.isWhite)
+    def listPossibleMoves(self, startingRank, startingFile) -> list[Move]:
+        return self.moveEngine.listPossibleMoves(startingRank, startingFile, self.isWhite)
+    
+    def getPieceName(self) -> str:
+        name = self.pieceType.value
+        if self.isWhite:
+            return name.upper()
+        else:
+            return name.lower()
