@@ -9,10 +9,10 @@ class Square():
         self.hasPiece = False
         self.pieceType = None
 
-    def landOnSquare(self, pieceType: PieceType):
+    def landOnSquare(self, pieceId: str):
         self.hasPiece = True
-        self.pieceType = pieceType
+        self.pieceId = pieceId
 
     def leaveSquare(self):
         self.hasPiece = False
-        self.pieceType = None
+        self.pieceId = None

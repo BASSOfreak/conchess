@@ -1,4 +1,4 @@
-from Piece import Piece
+from gameComponents.Piece import Piece
 
 def main():
     # initialize board

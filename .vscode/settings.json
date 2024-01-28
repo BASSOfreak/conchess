@@ -1,0 +1,8 @@
+{
+    "python.analysis.extraPaths": [
+        "./src/gameComponents",
+        "./src/moveEngine",
+        "./src/utility",
+        "./tests"
+    ]
+}
