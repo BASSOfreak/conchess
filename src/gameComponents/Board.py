@@ -1,4 +1,4 @@
-from Square import Square
+from gameComponents.square import Square
 class Board:
     def __init__(self, name: str):
         self.name = name

@@ -1,9 +1,5 @@
 import unittest
 
-from Piece import Piece
-from PieceType import PieceType
-
-
 class TestPiece(unittest.TestCase):
     def testColor(self):
         whitePiece = Piece("", True, None, 1, 1, None)

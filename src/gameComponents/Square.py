@@ -1,4 +1,4 @@
-from PieceType import PieceType
+from gameComponents.piece import Piece
 
 
 class Square():
@@ -7,12 +7,15 @@ class Square():
         self.rank = rankIn
         self.file = fileIn
         self.hasPiece = False
-        self.pieceType = None
+        self.piece = None
 
-    def landOnSquare(self, pieceId: str):
+    def landOnSquare(self, piece: Piece):
         self.hasPiece = True
-        self.pieceId = pieceId
+        self.piece = piece
 
     def leaveSquare(self):
         self.hasPiece = False
-        self.pieceId = None
+        self.piece = None
+
+    def getPiece(self) -> Piece:
+        return self.piece

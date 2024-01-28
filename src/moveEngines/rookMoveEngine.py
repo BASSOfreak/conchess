@@ -1,4 +1,4 @@
-from moveEngine.MoveEngine import MoveEngine
+from moveEngines.moveEngine import MoveEngine
 
 class RookMoveEngine(MoveEngine):
     def __init__(self):

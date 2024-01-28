@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
-from gameComponents.Gamestate import Gamestate
-from utility.Utility import signOf
+from gameComponents.board import Board
+from utility.utility import signOf
 
 class MoveEngine(ABC):
     def __init__(self):
-        self.hasMoved = False
+        pass
     
     @abstractmethod
     def listPossibleMoves(self, startingFile: int, startingRank: int, isWhite: bool):
@@ -21,11 +21,7 @@ class MoveEngine(ABC):
                 destFile: int, destRank: int, isWhite: bool) -> bool:
         pass
 
-    def madeMove(self):
-        self.hasMoved = True
-
-    def checkStraightPathClear(self, startingValue: int, destValue: int, horizontal: bool, otherDim: int) -> bool:
-        gamestate = Gamestate()
+    def checkStraightPathClear(self, startingValue: int, destValue: int, horizontal: bool, otherDim: int, board: Board) -> bool:
         # in same file
         if destValue == startingValue:
             # get number of moves to make along file
@@ -35,9 +31,9 @@ class MoveEngine(ABC):
             while abs(currentTestValue - destValue) > 0:
                 squareOccupied = False
                 if horizontal:
-                    squareOccupied = gamestate.pieceOnSquare(currentTestValue, otherDim)
+                    squareOccupied = board.getSquare(currentTestValue, otherDim).hasPiece
                 else:
-                    squareOccupied = gamestate.pieceOnSquare(otherDim, currentTestValue)
+                    squareOccupied = board.getSquare(otherDim, currentTestValue).hasPiece
                 if squareOccupied:
                     return False
                 currentTestValue += signOf(diff)

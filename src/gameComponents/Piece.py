@@ -1,5 +1,5 @@
 
-from gameComponents.PieceType import PieceType
+from gameComponents.pieceType import PieceType
 
 class Piece:
     def __init__(self, id: str, isWhiteIn: bool, pieceTypeIn: PieceType, 
@@ -15,13 +15,6 @@ class Piece:
             return "white piece"
         else:  
             return "black piece"
-
-    def listPossibleMoves(self, startingFile, startingRank) -> list[int]:
-        return self.moveEngine.listPossibleMoves(startingFile, startingRank, self.isWhite)
-    
-    def canMove(self, startingFile: int, startingRank: int, 
-                destFile: int, destRank: int, isWhite: bool) -> bool:
-        return self.moveEngine.canMove(startingFile, startingRank, destFile, destRank, isWhite)
 
     def getPieceName(self) -> str:
         name = self.pieceType.value
