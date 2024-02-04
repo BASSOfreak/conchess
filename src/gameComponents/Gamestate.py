@@ -37,10 +37,10 @@ class Gamestate:
 
     def initPieceOnSquare(cls, piece: Piece, fileIn: int, rankIn: int):
         cls.pieceList[piece.id] = piece
-        cls.board.getSquare(fileIn, rankIn).landOnSquare(piece.id)
+        cls.board.getSquare(fileIn, rankIn).landOnSquare(piece)
 
     def getPieceOnSquare(cls, fileIn: int, rankIn: int) -> Piece:
-        return cls.getPiece(cls.board.getSquare(fileIn, rankIn).pieceId)
+        return cls.board.getSquare(fileIn, rankIn).getPiece()
 
     def pieceOnSquare(cls, fileIn, rankIn) -> bool:
         return cls.board.getSquare(fileIn,rankIn).hasPiece
@@ -56,7 +56,10 @@ class Gamestate:
         piece.rank = destRank
         cls.addPieceToSquare(piece, destFile, destRank)
 
-    def canMove(cls, pieceID: str, destFile: int, destRank: int) -> bool:
+    def canMove(cls, pieceID: str, destFile: int, destRank: int, board: Board) -> bool:
         piece = cls.getPiece(pieceID)
         moveEngine = cls.getMoveEngine(piece.pieceType)
-        return moveEngine.canMove(piece.file, piece.rank, destFile, destRank, piece.isWhite)
+        return moveEngine.canMove(piece.file, piece.rank, destFile, destRank, piece.isWhite, board)
+    
+    def getCurrentBoard(cls) -> Board:
+        return cls.board

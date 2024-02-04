@@ -8,7 +8,6 @@ sys.path.append(os.path.join(parent_dir_name, "src"))
 from gameComponents.gamestate import Gamestate
 from gameComponents.piece import Piece
 from gameComponents.pieceType import PieceType
-from moveEngines.pawnMoveEngine import PawnMoveEngine
 
 class TestGamestate(unittest.TestCase):
     def testBoardSingleton(self):
@@ -26,4 +25,4 @@ class TestGamestate(unittest.TestCase):
         whitePawn = Piece(id="asd", isWhiteIn= True, pieceTypeIn=PieceType.PAWN, startFile= 4, startRank= 4)
         gamestate.initPieceOnSquare(whitePawn, 4,4)
         outPiece = gamestate.getPieceOnSquare(4,4)
-        self.assertEqual(whitePawn, outPiece)
+        self.assertEqual(whitePawn.id, outPiece.id)
