@@ -1,7 +1,7 @@
 from gameComponents.board import Board
 from moveEngines.moveEngine import MoveEngine
 
-class RookMoveEngine(MoveEngine):
+class QueenMoveEngine(MoveEngine):
     def __init__(self):
         super().__init__()
 
@@ -13,6 +13,9 @@ class RookMoveEngine(MoveEngine):
                 outSquares.append([startingFile, i])
             if i != startingFile:
                 outSquares.append([i, startingRank])
+
+        # add all diagonal squares
+        outSquares.extend   (super().listDiagonalSquares(startingFile, startingRank))
         return outSquares
     
     
@@ -21,5 +24,14 @@ class RookMoveEngine(MoveEngine):
     
     def canMove(self, startingFile: int, startingRank: int, 
                 destFile: int, destRank: int, isWhite: bool, board: Board) -> bool:
-        # run check straight path clear based on wheather horizontal or vertical
-        return super().checkStraightPathClear(startingRank, destRank, destFile != startingFile, destFile, board)
+        # check if can move there at all
+        if [destFile, destRank] in self.listPossibleMoves(startingFile, startingRank, isWhite):
+            # check if straight or diagonal
+            if startingFile == destFile or startingRank == destRank:
+                # run check straight path clear based on wheather horizontal or vertical
+                return super().checkStraightPathClear(startingRank, destRank, destFile != startingFile, destFile, board)
+            else:
+                # run diagonal check
+                return super().checkDiagonalPathClear(startingFile, startingRank, destFile, destRank, board)
+
+        return False

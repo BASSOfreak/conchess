@@ -1,11 +1,13 @@
-from gameComponents.Piece import Piece
+from gameComponents.piece import Piece
+from gameComponents.pieceType import PieceType
+from gameComponents.gamestate import Gamestate
 
 def main():
     # initialize board
-    piece1 = Piece(True)
-    piece2 = Piece(False)
-    print(piece1)
-    print(piece2)
+    gamestate = Gamestate()
+    piece1 = Piece("p1", True, PieceType.PAWN, 1,2)
+    gamestate.initPieceOnSquare(piece1)
+    
 
     # start game loop
     

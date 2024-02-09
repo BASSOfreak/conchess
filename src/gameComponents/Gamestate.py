@@ -3,6 +3,8 @@ import uuid
 from moveEngines.moveEngine import MoveEngine
 from moveEngines.pawnMoveEngine import PawnMoveEngine
 from moveEngines.rookMoveEngine import RookMoveEngine
+from moveEngines.bishopMoveEngine import BishopMoveEngine
+from moveEngines.queenMoveEngine import QueenMoveEngine
 from gameComponents.pieceType import PieceType
 from gameComponents.piece import Piece
 from gameComponents.board import Board
@@ -14,8 +16,10 @@ class Gamestate:
     moveEngineList = {
         PieceType.PAWN: PawnMoveEngine(),
         PieceType.ROOK: RookMoveEngine(),
+        PieceType.BISHOP: BishopMoveEngine(),
+        PieceType.QUEEN: QueenMoveEngine()
     }
-
+    
     def __new__(cls):
         if cls._instance is None:
             print('Creating game state instance')
@@ -23,6 +27,13 @@ class Gamestate:
             # Put any initialization here.
         return cls._instance
     
+    def drawBoard(cls):
+        cls.board.draw()
+
+    def clearBoard(cls):
+        cls.board = Board("mainboard")
+        cls.pieceList = {}
+
     def getPiece(cls, id: str) -> Piece:
         return cls.pieceList[id]
     
@@ -35,10 +46,12 @@ class Gamestate:
     def addPieceToSquare(cls, piece: Piece, file: int, rank: int):
         cls.board.getSquare(file, rank).landOnSquare(piece.id)
 
-    def initPieceOnSquare(cls, piece: Piece, fileIn: int, rankIn: int):
+    # put piece on square based on coordinates contained in piece
+    def initPieceOnSquare(cls, piece: Piece):
         cls.pieceList[piece.id] = piece
-        cls.board.getSquare(fileIn, rankIn).landOnSquare(piece)
+        cls.board.getSquare(piece.file, piece.rank).landOnSquare(piece)
 
+    # get piece on a square
     def getPieceOnSquare(cls, fileIn: int, rankIn: int) -> Piece:
         return cls.board.getSquare(fileIn, rankIn).getPiece()
 
@@ -59,7 +72,20 @@ class Gamestate:
     def canMove(cls, pieceID: str, destFile: int, destRank: int, board: Board) -> bool:
         piece = cls.getPiece(pieceID)
         moveEngine = cls.getMoveEngine(piece.pieceType)
-        return moveEngine.canMove(piece.file, piece.rank, destFile, destRank, piece.isWhite, board)
+        pathClear = moveEngine.canMove(piece.file, piece.rank, destFile, destRank, piece.isWhite, board)
+        if pathClear:
+            # make sure that target square is empty or occupied by opponent
+            if cls.board.getSquare(destFile, destRank).hasPiece:
+                # square has piece
+                # make sure that it is opposite color
+                return cls.board.getSquare(destFile, destRank).getPiece().isWhite != piece.isWhite
+            else:
+                return True
+
+        else:
+            return False
+
+
     
     def getCurrentBoard(cls) -> Board:
         return cls.board

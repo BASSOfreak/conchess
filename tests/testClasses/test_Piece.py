@@ -10,11 +10,11 @@ from gameComponents.pieceType import PieceType
 
 class TestPiece(unittest.TestCase):
     def testColor(self):
-        whitePiece = Piece("", True, None, 1, 1, None)
+        whitePiece = Piece("asdasd", True, PieceType.PAWN, 1,2)
         self.assertEqual(whitePiece.isWhite, True)
-        blackPiece = Piece("", False, None, 1, 1, None)
+        blackPiece = Piece("234rz6t", False, PieceType.PAWN, 1,2)
         self.assertEqual(blackPiece.isWhite, False)
 
     def testGetName(self):
-        piece = Piece("", True, PieceType.PAWN, 1, 1, None)
+        piece = Piece("asdasd", True, PieceType.PAWN, 1,2)
         self.assertEqual(piece.getPieceName(), 'P')

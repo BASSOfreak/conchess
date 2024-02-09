@@ -10,17 +10,21 @@ from gameComponents.piece import Piece
 from gameComponents.pieceType import PieceType
 
 class TestPawnMoveEngine(unittest.TestCase):
+    def setUp(self):
+        gamestate = Gamestate()
+        gamestate.clearBoard()
+
     def testNormalMove(self):
         gamestate = Gamestate()
         # start in middle of board
         whitePawn = Piece(id="asd", isWhiteIn= True, pieceTypeIn=PieceType.PAWN, startFile= 4, startRank= 4)
-        gamestate.initPieceOnSquare(whitePawn, 4,4)
+        gamestate.initPieceOnSquare(whitePawn)
         # white pawn should be able to move one step up
         whiteCanMoveUp = gamestate.canMove("asd",4,3, gamestate.getCurrentBoard())
         self.assertEqual(whiteCanMoveUp, True)
         # black pawn should be able to move one step down
         blackPawn = Piece(id="blasdkjh", isWhiteIn= False, pieceTypeIn=PieceType.PAWN, startFile= 3, startRank= 4)
-        gamestate.initPieceOnSquare(blackPawn, 3,4)
+        gamestate.initPieceOnSquare(blackPawn)
         blackCanMoveUp = gamestate.canMove("blasdkjh",3,5, gamestate.getCurrentBoard())
         # white pawn should be able to move one step up
         self.assertEqual(blackCanMoveUp, True)
@@ -30,9 +34,9 @@ class TestPawnMoveEngine(unittest.TestCase):
         # if there is a piece diagonally up, white pawn should be able to take
         gamestate = Gamestate()
         whitePawn = Piece(id="asd", isWhiteIn= True, pieceTypeIn=PieceType.PAWN, startFile= 5, startRank= 5)
-        gamestate.initPieceOnSquare(whitePawn, 5,5)
+        gamestate.initPieceOnSquare(whitePawn)
         blackPawn = Piece(id="3924758fth", isWhiteIn= False, pieceTypeIn=PieceType.PAWN, startFile= 4, startRank= 4)
-        gamestate.initPieceOnSquare(blackPawn, 4,4)
+        gamestate.initPieceOnSquare(blackPawn)
         resCanMove = gamestate.canMove("asd",4,4, gamestate.getCurrentBoard())
         self.assertEqual(resCanMove, True)
         # if there is a piece diagonally down, black pawn should be able to take
