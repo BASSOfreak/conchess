@@ -8,7 +8,7 @@ sys.path.append(os.path.join(parent_dir_name, "src"))
 from gameComponents.gamestate import Gamestate
 from gameComponents.piece import Piece
 from gameComponents.pieceType import PieceType
-from moveEngines.knightMoveEngine import KnightMoveEngine
+from moveEngines.kingMoveEngine import KingMoveEngine
 
 class TestRookMoveEngine(unittest.TestCase):
     def setUp(self):
@@ -16,18 +16,16 @@ class TestRookMoveEngine(unittest.TestCase):
         gamestate.clearBoard()
 
     def testListTakes(self):
-        moveEngine = KnightMoveEngine()
+        moveEngine = KingMoveEngine()
         takeList = moveEngine.listPossibleTakes(4, 4, True)
-        shouldBeList = [[6,3],[6,5],[2,3],[2,5],[3,2],[5,2],[3,6],[5,6]]
+        shouldBeList = [[3,3],[4,3],[5,3],[3,4],[5,4],[3,5],[4,5],[5,5]]
+        
         self.assertCountEqual(takeList, shouldBeList)
 
-    def testListTakesOnEdge(self):
-        moveEngine = KnightMoveEngine()
-        takeList = moveEngine.listPossibleTakes(1,4, True)
-        shouldBeList = [[2,2],[2,6],[3,3],[3,5]]
-        self.assertCountEqual(takeList, shouldBeList)
-
-    def testCanMove(self):
+    def testTakeAdjacent(self):
         gamestate = Gamestate()
-        moveEngine = KnightMoveEngine()
-        self.assertEqual(moveEngine.canMove(4,4,6,5,True,gamestate.getCurrentBoard()), True)
+        whiteKing = Piece("asd32", True, PieceType.KING, 4,4)
+        gamestate.initPieceOnSquare(whiteKing)
+        blackPawn = Piece("q327d6r4tg", False, PieceType.PAWN, 4,3)
+        gamestate.initPieceOnSquare(blackPawn)
+        self.assertEqual(gamestate.canMove("asd32",4,3,gamestate.getCurrentBoard()), True)

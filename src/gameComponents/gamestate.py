@@ -5,6 +5,8 @@ from moveEngines.pawnMoveEngine import PawnMoveEngine
 from moveEngines.rookMoveEngine import RookMoveEngine
 from moveEngines.bishopMoveEngine import BishopMoveEngine
 from moveEngines.queenMoveEngine import QueenMoveEngine
+from moveEngines.kingMoveEngine import KingMoveEngine
+from moveEngines.knightMoveEngine import KnightMoveEngine
 from gameComponents.pieceType import PieceType
 from gameComponents.piece import Piece
 from gameComponents.board import Board
@@ -17,8 +19,11 @@ class Gamestate:
         PieceType.PAWN: PawnMoveEngine(),
         PieceType.ROOK: RookMoveEngine(),
         PieceType.BISHOP: BishopMoveEngine(),
-        PieceType.QUEEN: QueenMoveEngine()
-    }
+        PieceType.QUEEN: QueenMoveEngine(),
+        PieceType.KING: KingMoveEngine(),
+        PieceType.KNIGHT: KnightMoveEngine(),
+
+        }
     
     def __new__(cls):
         if cls._instance is None:
