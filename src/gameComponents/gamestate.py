@@ -24,7 +24,10 @@ class Gamestate:
         PieceType.KNIGHT: KnightMoveEngine(),
 
         }
-    
+    whitePiecesThatCouldCheck = []
+    blackPiecesThatCouldCheck = []
+
+
     def __new__(cls):
         if cls._instance is None:
             print('Creating game state instance')
@@ -90,7 +93,57 @@ class Gamestate:
         else:
             return False
 
-
+    
     
     def getCurrentBoard(cls) -> Board:
         return cls.board
+    
+    def attemptMove(cls, pieceID: str, destFile: int, destRank: int) -> [bool, str]:
+        piece: Piece = cls.getPiece(pieceID)
+        moveSuccess: bool = False
+        attemptDescription: str = "piece can move there"
+        canPieceMoveThere: bool = False
+        # check if piece can move to square
+        if cls.canMove(pieceID, destFile, destRank, cls.getCurrentBoard()):
+            # check if there is another piece on the destination square and if it is opposite color
+            if cls.getCurrentBoard().getSquare(destFile, destRank).hasPiece:
+                # check if opposite colors
+                destSquarePieceColorWhite = cls.getCurrentBoard().getSquare(destFile, destRank).getPiece().isWhite()
+                if destSquarePieceColorWhite != piece.isWhite():
+                    # moving there is possible
+                    canPieceMoveThere = True
+                else:
+                    # cant take piece of same color
+                    moveSuccess = False
+                    attemptDescription = "can't move to square with piece of same color"
+            else: 
+                # no piece on target square
+                canPieceMoveThere = True
+        else:
+            attemptDescription = "piece can not move to this square"
+
+        # test for checks if piece can move there
+        if canPieceMoveThere:
+            # create board with new position
+
+            # determine if piece is king or not
+            if piece.pieceType == PieceType.KING:
+                # check for all opposition pieces if they can check king in its new position
+                kingBecomesChecked = False
+                if kingBecomesChecked:
+                    attemptDescription = "king can not move there because it would be in check"
+                else:
+                    moveSuccess = True
+            else:
+                # check all pieces that might be able to check if they are now checking
+                kingBecomesChecked = False
+                if kingBecomesChecked:
+                    attemptDescription = "piece can not move there because king would be in check"
+                else:
+                    moveSuccess = True
+
+
+        return [moveSuccess, attemptDescription]
+
+    def testIfCreatesChecks():
+        pass
