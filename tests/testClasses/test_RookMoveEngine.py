@@ -22,6 +22,13 @@ class TestRookMoveEngine(unittest.TestCase):
         
         self.assertCountEqual(takeList, shouldBeList)
 
+    def testCanMove(self):
+        gamestate = Gamestate()
+        gamestate.getCurrentBoard().initGameBoard()
+        moveEngine = RookMoveEngine()
+        self.assertEqual(moveEngine.canMove(1,1,3,6,False,gamestate.getCurrentBoard()), False)
+
+
     def testBlockedTake(self):
         gamestate = Gamestate()
         whiteRook = Piece("asd32", True, PieceType.ROOK, 4,7,)

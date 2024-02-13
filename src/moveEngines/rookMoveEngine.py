@@ -21,5 +21,9 @@ class RookMoveEngine(MoveEngine):
     
     def canMove(self, startingFile: int, startingRank: int, 
                 destFile: int, destRank: int, isWhite: bool, board: Board) -> bool:
-        # run check straight path clear based on wheather horizontal or vertical
-        return super().checkStraightPathClear(startingRank, destRank, destFile != startingFile, destFile, board)
+        # test if moving horizontal or vertical
+        if startingFile == destFile or startingRank == destRank:
+            # run check straight path clear based on wheather horizontal or vertical
+            return super().checkStraightPathClear(startingRank, destRank, destFile != startingFile, destFile, board)
+        else:
+            return False

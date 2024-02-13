@@ -10,8 +10,11 @@ class Square():
         self.piece = None
 
     def landOnSquare(self, piece: Piece):
-        self.hasPiece = True
-        self.piece = piece
+        if isinstance(piece, Piece):
+            self.hasPiece = True
+            self.piece = piece
+        else:
+            raise ValueError('input piece is not instance of Piece')
 
     def leaveSquare(self):
         self.hasPiece = False

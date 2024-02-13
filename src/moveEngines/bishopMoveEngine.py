@@ -14,5 +14,9 @@ class BishopMoveEngine(MoveEngine):
     
     def canMove(self, startingFile: int, startingRank: int, 
                 destFile: int, destRank: int, isWhite: bool, board: Board) -> bool:
-        # run check straight path clear based on wheather horizontal or vertical
-        return super().checkDiagonalPathClear(startingFile, startingRank, destFile, destRank, board)
+        # test if piece can move to square at all
+        if [destFile, destRank] in self.listPossibleMoves(startingFile, startingRank, isWhite):
+            # run check straight path clear based on wheather horizontal or vertical
+            return super().checkDiagonalPathClear(startingFile, startingRank, destFile, destRank, board)
+        else:
+            return False

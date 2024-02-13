@@ -5,9 +5,8 @@ from gameComponents.gamestate import Gamestate
 def main():
     # initialize board
     gamestate = Gamestate()
-    piece1 = Piece("p1", True, PieceType.PAWN, 1,2)
-    gamestate.initPieceOnSquare(piece1)
-    
+    gamestate.getCurrentBoard().initGameBoard()
+    gamestate.getCurrentBoard().draw()
 
     # start game loop
     

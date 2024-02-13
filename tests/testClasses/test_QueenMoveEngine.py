@@ -30,3 +30,9 @@ class TestRookMoveEngine(unittest.TestCase):
         blackPawn = Piece("q327d6r4tg", False, PieceType.PAWN, 4,3)
         gamestate.initPieceOnSquare(blackPawn)
         self.assertEqual(gamestate.canMove("asd32",4,3,gamestate.getCurrentBoard()), True)
+
+    def testCanNotMove(self):
+        gamestate = Gamestate()
+        whiteQueen = Piece("asd32", True, PieceType.QUEEN, 4,4)
+        gamestate.initPieceOnSquare(whiteQueen)
+        self.assertEqual(gamestate.canMove("asd32",5,2,gamestate.getCurrentBoard()), False)
