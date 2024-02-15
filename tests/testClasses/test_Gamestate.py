@@ -1,4 +1,6 @@
 import unittest
+from unittest.mock import patch
+
 
 import os
 import sys
@@ -6,6 +8,7 @@ parent_dir_name = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpa
 sys.path.append(os.path.join(parent_dir_name, "src"))
 
 from gameComponents.gamestate import Gamestate
+#from gameComponents.gamestate import promotePiece
 from gameComponents.piece import Piece
 from gameComponents.pieceType import PieceType
 
@@ -69,3 +72,23 @@ class TestGamestate(unittest.TestCase):
         [seventhMoveSuccess, resultString] = gamestate.attemptMove(blackKnight.id, 1,4)
         self.assertEqual(seventhMoveSuccess, False)
         #gamestate.getCurrentBoard().draw()
+
+    @patch('src.gameComponents.gamestate.promotePiece')
+    def testPromotionOfPawn(self, mock_fun):
+        #mock_fun.return_value = PieceType.QUEEN
+        gamestate = Gamestate()
+        whitePawn = Piece(id="whitePawn", isWhiteIn= True, pieceTypeIn=PieceType.PAWN, startFile= 4, startRank= 2)
+        gamestate.initPieceOnSquare(whitePawn)
+        whiteKing = Piece(id="whiteKing", isWhiteIn= True, pieceTypeIn=PieceType.KING, startFile= 5, startRank= 1)
+        gamestate.initPieceOnSquare(whiteKing)
+        blackKing = Piece(id="blackKing", isWhiteIn= False, pieceTypeIn=PieceType.KING, startFile= 3, startRank= 1)
+        gamestate.initPieceOnSquare(blackKing)
+        #gamestate.drawBoard()
+        print("promote pawn to queen to pass")
+        [firstMoveSuccess, resultString] = gamestate.attemptMove("whitePawn", 4,1)
+        #gamestate.drawBoard()
+        [secondMoveSuccess, resultString] = gamestate.attemptMove("blackKing", 2,2)
+        #gamestate.drawBoard()
+        self.assertEqual(firstMoveSuccess, True)
+        self.assertEqual(secondMoveSuccess, True)
+        self.assertEqual(gamestate.getPiece("whitePawn").pieceType, PieceType.QUEEN)

@@ -157,8 +157,15 @@ class Gamestate:
         if moveSuccess:
             # move piece
             cls.getCurrentBoard().movePieceFromToSquare(pieceID, destFile, destRank)
-            # update possible checks for piece that moved
             
+            # check for promotion of pawn
+            if piece.pieceType == PieceType.PAWN:
+                # set final rank
+                finalRank = 1 if piece.isWhite else 8
+                if piece.rank == finalRank:
+                    newPieceType = promotePiece()
+                    piece.pieceType = newPieceType
+            # update possible checks for piece that moved        
 
         return moveSuccess, attemptDescription
 
@@ -191,3 +198,27 @@ class Gamestate:
                 return True
 
         return False
+    
+def promotePiece() -> PieceType:
+    """
+    get the type of piece that the user wants a pawn to be promoted to
+    """
+    while True:
+        print("pawn has reached final rank.\n" + 
+            "which piece should it get promoted to?\n" +
+            "q = Queen, r = Rook, b = Bishop, n = Knight")
+        # get user input
+        string = input()
+
+        # select case
+        match string:
+            case "q":
+                return PieceType.QUEEN
+            case "r":
+                return PieceType.ROOK
+            case "b":
+                return PieceType.BISHOP
+            case "n":
+                return PieceType.KNIGHT
+            
+        print("no valid piece selected. Try again.\n")
