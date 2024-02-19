@@ -42,7 +42,17 @@ class TestPawnMoveEngine(unittest.TestCase):
         # if there is a piece diagonally down, black pawn should be able to take
         
         
-    def testPromotion(self):
-        # if white pawn moves to top rank, it should be promoted
-        # if white pawn moves to bottom rank, it should be promoted
-        pass
+    def testEnPassant(self):
+        gamestate = Gamestate()
+        whitePawn = Piece(id="asd", isWhiteIn= True, pieceTypeIn=PieceType.PAWN, startFile= 5, startRank= 4)
+        gamestate.initPieceOnSquare(whitePawn)
+        blackPawn = Piece(id="3924758fth", isWhiteIn= False, pieceTypeIn=PieceType.PAWN, startFile= 4, startRank= 4)
+        blackPawn.hasMadeDoubleMove = True
+        gamestate.initPieceOnSquare(blackPawn)
+        whiteKing = Piece(id="whiteKing", isWhiteIn= True, pieceTypeIn=PieceType.KING, startFile= 5, startRank= 1)
+        gamestate.initPieceOnSquare(whiteKing)
+        blackKing = Piece(id="blackKing", isWhiteIn= False, pieceTypeIn=PieceType.KING, startFile= 3, startRank= 1)
+        gamestate.initPieceOnSquare(blackKing)
+        [movesuccess, string] = gamestate.attemptMove("asd", 4,3)
+        self.assertEqual(movesuccess, True)
+        

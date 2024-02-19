@@ -1,12 +1,9 @@
-from gameComponents.piece import Piece
-from gameComponents.pieceType import PieceType
-from gameComponents.gamestate import Gamestate
+from gameComponents.gameflow import Gameflow
 
 def main():
     # initialize board
-    gamestate = Gamestate()
-    gamestate.getCurrentBoard().initGameBoard()
-    gamestate.getCurrentBoard().draw()
+    gameFlow = Gameflow()
+    gameFlow.gameLoop()
 
     # start game loop
     

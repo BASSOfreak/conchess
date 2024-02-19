@@ -92,3 +92,24 @@ class TestGamestate(unittest.TestCase):
         self.assertEqual(firstMoveSuccess, True)
         self.assertEqual(secondMoveSuccess, True)
         self.assertEqual(gamestate.getPiece("whitePawn").pieceType, PieceType.QUEEN)
+
+    def testCastleNotPossible(self):
+        gamestate = Gamestate()
+        gamestate.getCurrentBoard().initGameBoard()
+        whiteKing = gamestate.getPieceOnSquare(5,8)
+        [moveSuccess, resultString] = gamestate.attemptMove(whiteKing.id, 7,8)
+        print(resultString)
+        self.assertEqual(moveSuccess, False)
+
+    def testCastlePossible(self):
+        gamestate = Gamestate()
+        gamestate.getCurrentBoard().initGameBoard()
+        gamestate.attemptMove(gamestate.getPieceOnSquare(5,7).id, 5,6)
+        gamestate.getCurrentBoard().draw()
+        gamestate.attemptMove(gamestate.getPieceOnSquare(6,8).id, 5,7)
+        gamestate.getCurrentBoard().draw()
+        gamestate.attemptMove(gamestate.getPieceOnSquare(7,8).id, 6,6)
+        gamestate.getCurrentBoard().draw()
+        [moveSuccess, resultString] = gamestate.attemptMove(gamestate.getPieceOnSquare(5,8).id, 7,8)
+        gamestate.getCurrentBoard().draw()
+        self.assertEqual(moveSuccess, True)

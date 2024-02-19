@@ -77,6 +77,9 @@ class PawnMoveEngine(MoveEngine):
                 # make sure that there is a piece and that color is opposite
                 if targetSquarePiece != None and targetSquarePiece.isWhite != isWhite:
                     return True
+                # check for en passant in starting rank and target file
+                elif board.getSquare(destFile, startingRank).hasPiece and board.getSquare(destFile, startingRank).getPiece().hasMadeDoubleMove:
+                    return True
 
         # double move
         # determine proper starting position for double move    

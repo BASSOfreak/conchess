@@ -12,6 +12,7 @@ from moveEngines.knightMoveEngine import KnightMoveEngine
 from gameComponents.pieceType import PieceType
 from gameComponents.piece import Piece
 from gameComponents.board import Board
+from utility.utility import signOf
 
 class Gamestate:
     _instance = None
@@ -27,6 +28,17 @@ class Gamestate:
 
         }
 
+    castleProblems = [
+        "King has moved",
+        "Rook has moved",
+        "King is in Check",
+        "Intermediate square is in check",
+        "King target square is in check",
+        "path between king and rook is not clear"
+    ]
+
+    whiteHasCastled: bool = False
+    blackHasCastled: bool = False
 
     def __new__(cls):
         if cls._instance is None:
@@ -143,29 +155,106 @@ class Gamestate:
                     # update pieces that can potentially check king
             else:
                 # get king square
-                oppKing: Piece = newBoard.pieceList[newBoard.getOppKingId(not piece.isWhite)]
+                ownKing: Piece = newBoard.pieceList[newBoard.getOppKingId(not piece.isWhite)]
 
 
                 # check all pieces that might be able to check if they are now checking
-                kingBecomesChecked = cls.testIfCreatesChecks(oppKing.file, oppKing.rank, piece.isWhite, newBoard)
+                kingBecomesChecked = cls.testIfCreatesChecks(ownKing.file, ownKing.rank, piece.isWhite, newBoard)
                 if kingBecomesChecked:
                     attemptDescription = "piece can not move there because king would be in check"
                 else:
                     moveSuccess = True
 
+        # define values for castling
+        isCastle = False
+        rookFile = 0
+        intermediateSquareFile = piece.file + signOf(destFile - piece.file)
+        # check if move is castle
+        if not canPieceMoveThere and piece.pieceType == PieceType.KING:
+            castleRank = 8 if piece.isWhite else 1
+            # check if moving along starting rank 
+            if piece.rank == castleRank and destRank == castleRank and (destFile == 7 or destFile == 3):
+                # king side castle
+                if destFile == 7:
+                    rookFile = 8
+                # queen side castle
+                elif destFile == 3:
+                    rookFile = 1
+                # conditions for castling 
+                castleConditionsMet = []
+                # has king moved
+                castleConditionsMet.append(not piece.hasMoved)
+                # has rook moved
+                castleConditionsMet.append(not cls.getCurrentBoard().getSquare(rookFile, destRank).getPiece().hasMoved)
+                # no checks on relevant squares
+                # check on king square
+                castleConditionsMet.append(not cls.testIfCreatesChecks(piece.file, piece.rank, piece.isWhite, cls.getCurrentBoard()))
+                # check on intermediate square
+                castleConditionsMet.append(not cls.testIfCreatesChecks(intermediateSquareFile, destRank, piece.isWhite, cls.getCurrentBoard()))
+                # check on king destination square
+                castleConditionsMet.append(not cls.testIfCreatesChecks(destFile, destRank, piece.isWhite, cls.getCurrentBoard()))
+                # all squares between king and rook must be empty
+                tempMoveEngine = cls.moveEngineList[PieceType.KING]
+                castleConditionsMet.append(tempMoveEngine.checkStraightPathClear(piece.file, rookFile, True, castleRank, cls.getCurrentBoard()))
+
+                canCastle = True
+                canNotCastleReasons = []
+                for [cond, string] in zip(castleConditionsMet, cls.castleProblems):
+                    # can not castle if condition is not met
+                    if not cond:
+                        canCastle = False
+                        # add reason
+                        canNotCastleReasons.append(string)
+                
+
+                if canCastle:
+                    isCastle = True
+                    moveSuccess = True
+                    attemptDescription = "possible castle detected"
+                else:
+                    attemptDescription = "tried to castle but the following problems occured\n"
+                    for problem in canNotCastleReasons:
+                        attemptDescription = attemptDescription + "-" +  problem + "\n"
+
+            else:
+                attemptDescription = "king can not move to this square"
+            
+
         # make the move if possible
         if moveSuccess:
+            startRank = piece.rank
+            startFile = piece.file
+            piece.hasMoved = True
             # move piece
             cls.getCurrentBoard().movePieceFromToSquare(pieceID, destFile, destRank)
             
             # check for promotion of pawn
             if piece.pieceType == PieceType.PAWN:
+                piece.hasMadeDoubleMove = False
+
                 # set final rank
                 finalRank = 1 if piece.isWhite else 8
                 if piece.rank == finalRank:
                     newPieceType = promotePiece()
                     piece.pieceType = newPieceType
-            # update possible checks for piece that moved        
+
+                # check if made double move
+                if abs(startRank - destRank) == 2:
+                    piece.hasMadeDoubleMove = True
+            elif isCastle:
+                # set flag for castle
+                if piece.isWhite:
+                    cls.whiteHasCastled = True
+                else:
+                    cls.blackHasCastled = True
+
+                # move rook
+                rookId = cls.getPieceOnSquare(rookFile, destRank).id
+                cls.getCurrentBoard().movePieceFromToSquare(rookId, intermediateSquareFile, destRank)
+
+                
+                
+
 
         return moveSuccess, attemptDescription
 

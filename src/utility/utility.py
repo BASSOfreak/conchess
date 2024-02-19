@@ -1,6 +1,9 @@
 def fileToLetter(file: int) -> str:
     return chr(file + 20)
 
+def letterToFile(letter: str) -> int:
+    return ord(letter) - 64
+
 def internalRankToRealRank(rank: int) -> str:
     return str(9-rank)
 
