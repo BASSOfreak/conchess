@@ -149,5 +149,31 @@ class Board:
         print(self.rankDelim)
         print(self.fileNames)
     
-    
-        
+    def getBoardRep(self) -> str:
+        output:str = ""
+        # loop through files
+        for rankIt in range(1,9):
+            emptyCounter:int = 0
+            # loop through ranks
+            for fileIt in range(1,9):
+                # check if there is a piece on the square
+                if self.getSquare(fileIt, rankIt).hasPiece:
+                    # add value of counter to output and reset
+                    if emptyCounter > 0:
+                        output = output + str(emptyCounter)
+                        emptyCounter = 0
+                    
+                    # add piece to output
+                    output = output + self.getSquare(fileIt, rankIt).getPiece().getPieceName()
+                else:
+                    # increment counter
+                    emptyCounter = emptyCounter + 1
+            
+            # add remaining empty squares if there are any
+            if emptyCounter > 0:
+                output = output + str(emptyCounter)
+                emptyCounter = 0
+                
+            # add a '/' after each rank
+            output = output + "/"
+        return output

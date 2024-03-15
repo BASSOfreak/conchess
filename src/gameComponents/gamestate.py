@@ -122,8 +122,8 @@ class Gamestate:
             # check if there is another piece on the destination square and if it is opposite color
             if cls.getCurrentBoard().getSquare(destFile, destRank).hasPiece:
                 # check if opposite colors
-                destSquarePieceColorWhite = cls.getCurrentBoard().getSquare(destFile, destRank).getPiece().isWhite()
-                if destSquarePieceColorWhite != piece.isWhite():
+                destSquarePieceColorWhite = cls.getCurrentBoard().getSquare(destFile, destRank).getPiece().isWhite
+                if destSquarePieceColorWhite != piece.isWhite:
                     # moving there is possible
                     canPieceMoveThere = True
                 else:
@@ -288,6 +288,11 @@ class Gamestate:
 
         return False
     
+    def getBoardRep(cls) -> str:
+        boardState = cls.getCurrentBoard().getBoardRep()
+        print(boardState)
+
+    
 def promotePiece() -> PieceType:
     """
     get the type of piece that the user wants a pawn to be promoted to
@@ -311,3 +316,4 @@ def promotePiece() -> PieceType:
                 return PieceType.KNIGHT
             
         print("no valid piece selected. Try again.\n")
+
